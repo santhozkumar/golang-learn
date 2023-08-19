@@ -57,3 +57,7 @@ vet         report likely mistakes in packages
 1. Go source Files can have only one package per directory  
 2. A t.Errorf call is not an assertion. The test continues even after an error is logged  
 3. When a function returns a pointer to something, you need to make sure you check if it's nil or you might raise a runtime exception - the compiler won't help you here.  
+
+
+
+Adding to check git
