@@ -1,26 +1,31 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"golang.org/x/net/html"
 )
 
 func main() {
+    var asciiSpace = [256]uint8{'\t': 1, '\n': 1, '\v': 1, '\f': 1, '\r': 1, ' ': 1}
+    fmt.Printf("%v %T\n", asciiSpace, asciiSpace)
     for _, url := range os.Args[1:] {
-        links, err := findLinks(url)
+        words, images, err := CountWordsAndImages(url)
+        // links, err := findLinks(url)
 
         if err != nil {
             fmt.Println(err)
         }
 
-    for _, link := range links {
-        fmt.Println(link)
-    }
+    // for _, link := range links {
+    //     fmt.Println(link)
+    // }
 
-
+    fmt.Println(words, images)
     }
 
 }
@@ -86,6 +91,42 @@ func CountWordsAndImages(url string) (words, images int, err error) {
 
 func countWordsAndImages(n *html.Node) (words, images int) {
 
-    return 0, 0
+    if n.Type == html.ElementNode {
+        if n.Data == "style" || n.Data == "script"{
+            return 
+        }else if n.Data == "img" {
+        // }else if strings.HasPrefix(n.Data, "img"){
+            fmt.Println("under images")
+            images ++
+        }
+    }else if n.Type == html.TextNode {
+        text := strings.TrimSpace(n.Data)
+        lineScanner := bufio.NewScanner(strings.NewReader(text))
+        lineScanner.Split(bufio.ScanLines)
 
+        for lineScanner.Scan() {
+            wordScanner := bufio.NewScanner(strings.NewReader(lineScanner.Text()))
+            wordScanner.Split(bufio.ScanWords)
+
+            for wordScanner.Scan() {
+                words++
+            }
+
+            if err := wordScanner.Err(); err != nil {
+                fmt.Println(err)
+            }
+        }
+
+        if err := lineScanner.Err(); err != nil {
+            fmt.Println(err)
+        }
+    }
+
+    for c:=n.FirstChild; c != nil; c = c.NextSibling{
+        w, i := countWordsAndImages(c)
+        words += w
+        images += i
+    }
+
+    return 
 }

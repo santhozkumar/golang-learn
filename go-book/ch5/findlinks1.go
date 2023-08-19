@@ -8,8 +8,6 @@ import (
 	"golang.org/x/net/html"
 )
 
-
-
 func main2(){
     s := `<p>Links:</p><ul><li>
     <a href="foo">Foo</a>
