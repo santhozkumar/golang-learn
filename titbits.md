@@ -61,3 +61,5 @@ vet         report likely mistakes in packages
 
 
 Adding to check git
+
+After config settings
