@@ -7,13 +7,11 @@ import (
 	"os/user"
 )
 
-
-
 func main() {
-    user, err := user.Current()
-    if err != nil {
-        panic(err)
-    }
-    fmt.Printf("Welcome to the monkey programming language %s \n", user.Username)
-    repl.Start(os.Stdin, os.Stdout)
+	user, err := user.current()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Welcome to the monkey programming language %s \n", user.Username)
+	repl.Start(os.Stdin, os.Stdout)
 }
